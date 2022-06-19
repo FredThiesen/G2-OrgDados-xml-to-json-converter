@@ -1,0 +1,23 @@
+{
+  "name": "g2-orgdados-xml-to-json-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "DownloadBlob.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FredThiesen/G2-OrgDados-xml-to-json-converter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FredThiesen/G2-OrgDados-xml-to-json-converter/issues"
+  },
+  "homepage": "https://github.com/FredThiesen/G2-OrgDados-xml-to-json-converter#readme",
+  "dependencies": {
+    "@azure/storage-blob": "^12.10.0",
+    "dotenv": "^16.0.1"
+  }
+}
