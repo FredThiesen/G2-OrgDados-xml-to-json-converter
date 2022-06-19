@@ -18,6 +18,7 @@
   "homepage": "https://github.com/FredThiesen/G2-OrgDados-xml-to-json-converter#readme",
   "dependencies": {
     "@azure/storage-blob": "^12.10.0",
+    "@azure/storage-queue": "^12.9.0",
     "dotenv": "^16.0.1"
   }
 }
