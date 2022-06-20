@@ -24,7 +24,11 @@ async function main() {
 		console.log(blob.name)
 	}
 
+	//array que vai conter os xmls
 	let xmlArray = []
+
+	//array que vai conter os objetos convertidos
+	let jsonArray = []
 
 	//pra cada arquivo faz uma request e faz o download do blob
 	for await (const nome of nomeArquivos) {
@@ -32,15 +36,15 @@ async function main() {
 
 		const downloadBlockBlobResponse = await blockBlobClient.download(0)
 		console.log("\nDownloaded blob content...")
-		console.log(
-			"\t",
-			await streamToText(downloadBlockBlobResponse.readableStreamBody)
+
+		let readable = await streamToText(
+			downloadBlockBlobResponse.readableStreamBody
 		)
-		xmlArray.push(downloadBlockBlobResponse.readableStreamBody)
+
+		xmlArray.push(readable)
 	}
 
-	console.log(xmlArray[0])
-
+	//converte um xml para json e retorna o objeto convertido
 	const convertXmlToJson = (xml) => {
 		let converted = null
 		parseString(xml, (err, result) => {
@@ -50,13 +54,8 @@ async function main() {
 	}
 
 	for (xml of xmlArray) {
-		console.log(convertXmlToJson(xml))
+		jsonArray.push(convertXmlToJson(xml))
 	}
-	//********--------------------------- */
-
-	// AQUI VAI O CODIGO QUE TRANSFORMA O XML BAIXADO EM JSON NOVAMENTE
-
-	//********--------------------------- */
 
 	//enviar mensagens para a fila
 	const queueClient = new QueueClient(
@@ -67,15 +66,8 @@ async function main() {
 	// Create the queue
 	const createQueueResponse = await queueClient.createIfNotExists()
 
-	//utilizado um array mockado para testes ate que o metodo de converter xml para json esteja pronto
-	const pessoas = [
-		{ nome: "luiz", idade: 36 },
-		{ nome: "rodrigo", idade: 40 },
-		{ nome: "reginaldo", idade: 64 },
-	]
-
-	for await (let pessoa of pessoas) {
-		queueClient.sendMessage(JSON.stringify(pessoa))
+	for await (let json of jsonArray) {
+		queueClient.sendMessage(JSON.stringify(json.root))
 	}
 
 	//const sendMessageResponse = await queueClient.sendMessage(JSON.stringify(pessoa));
