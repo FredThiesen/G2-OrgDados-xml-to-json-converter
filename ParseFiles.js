@@ -12,7 +12,7 @@ async function main() {
 		AZURE_STORAGE_CONNECTION_STRING
 	)
 	// Create a unique name for the container
-	const containerName = "g2faccat"
+	const containerName = "arquivos-xml"
 
 	// Get a reference to a container
 	const containerClient = blobServiceClient.getContainerClient(containerName)
