@@ -1,45 +1,17 @@
-var XMLHttpRequest = require("xhr2")
 var parseString = require("xml2js").parseString
-var xhr = new XMLHttpRequest()
+var request = require("request")
 
-const convertXmlToJson = (url) => {
-	xhr.open("GET", url)
-	xhr.send()
-
-	const handleLogConverted = (converted) => {
-		converted.map((book) => {
-			console.log("LIVRO")
-			console.log("----------------")
-			console.log("\n")
-			console.log("Livro: ", book.title[0])
-			console.log("Genero: ", book.genre[0])
-			console.log("Autor: ", book.author[0].name[0])
-			console.log("Preço: ", book.price[0])
-			console.log("Descrição: ", book.description[0])
-			console.log("\n\n\n")
-		})
-	}
-
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4) {
-			if (xhr.status === 200) {
-				const converted = convertXmlToJson(xhr.responseText)
-				handleLogConverted(converted)
-			} else {
-				console.log("Erro: " + xhr.status)
+function convertXmlToJson(url) {
+	return new Promise((resolve, reject) => {
+		request(url, (err, response, body) => {
+			if (err) {
+				reject(err)
 			}
-		}
-	}
-
-	const convertXmlToJson = (xml) => {
-		let converted = null
-		parseString(xml, (err, result) => {
-			converted = result.catalog
+			parseString(body, (err, result) => {
+				resolve(result)
+			})
 		})
-		return converted.book
-	}
+	})
 }
 
-module.exports = {
-	convertXmlToJson,
-}
+module.exports = { convertXmlToJson }
