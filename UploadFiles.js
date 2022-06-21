@@ -12,7 +12,7 @@ async function main() {
 
 
 
-    const receivedMessagesResponse = await queueClient.receiveMessages({ numberOfMessages: 30 });
+    const receivedMessagesResponse = await queueClient.receiveMessages();
 
     const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
    
@@ -26,11 +26,14 @@ async function main() {
    
 
 
-    for (i = 0; i < receivedMessagesResponse.receivedMessageItems.length; i++) {
-        receivedMessage = receivedMessagesResponse.receivedMessageItems[i];
+    if (receivedMessagesResponse.receivedMessageItems.length == 1) {
+        receivedMessage = receivedMessagesResponse.receivedMessageItems[0];
 
-        // 'Process' the message
-        console.log("\tProcessing:", receivedMessage.messageText);
+        // decodifica a mensagem da fila (base 64) 
+        let buff = Buffer.from(receivedMessage.messageText, 'base64').toString('utf-8').replace('Processing: ','');
+
+        //parse do objeto e retorna o link de download q vai se passado pra function convert
+        console.log(JSON.parse(buff).data.url);
 
         // Delete the message
         const deleteMessageResponse = await queueClient.deleteMessage(
@@ -38,11 +41,12 @@ async function main() {
             receivedMessage.popReceipt
         );
         console.log("\tMessage deleted, requestId:", deleteMessageResponse.requestId);
-        const blobName = "arquivo"+i + ".json";
+        const blobName = "arquivo" + ".json"; //<-- PRECISAMOS CRIAR UM GERADOR DE ID PARA O NOME DO ARQUIVO
 
         //abaixo ele salva o blob no container
         // Get a block blob client
         const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+     
         const uploadBlobResponse = await blockBlobClient.upload(receivedMessage.messageText, receivedMessage.messageText.length);
         console.log("\nUploading to Azure storage as blob:\n\t", blobName);
     }
