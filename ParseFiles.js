@@ -45,13 +45,6 @@ async function main() {
 	}
 
 	//converte um xml para json e retorna o objeto convertido
-	const convertXmlToJson = (xml) => {
-		let converted = null
-		parseString(xml, (err, result) => {
-			converted = result
-		})
-		return converted
-	}
 
 	for (xml of xmlArray) {
 		jsonArray.push(convertXmlToJson(xml))

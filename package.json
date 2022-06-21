@@ -20,6 +20,7 @@
     "@azure/storage-blob": "^12.10.0",
     "@azure/storage-queue": "^12.9.0",
     "dotenv": "^16.0.1",
-    "xhr2": "^0.2.1"
+    "xhr2": "^0.2.1",
+    "xml2js": "^0.4.23"
   }
 }
